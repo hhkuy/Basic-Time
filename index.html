@@ -189,5 +189,31 @@
     updateAnalogClock();
     setInterval(updateAnalogClock, 1000);
   </script>
+  
+  <!-- إضافة الموسيقى دون تعديل أي شيء في الكود السابق -->
+  <script>
+    // إنشاء عنصر صوت والإشارة إلى رابط الموسيقى
+    const audio = new Audio("https://raw.githubusercontent.com/hhkuy/Basic-Time/main/anytunz_ringtones_14031017_213716208%20(1).mp3");
+    audio.loop = true;
+
+    // محاولة تشغيل الصوت فور دخول المستخدم إلى الصفحة
+    // (قد تتطلب بعض المتصفحات تفاعل المستخدم)
+    audio.play().catch(() => { 
+      // في حال منع المتصفح التشغيل التلقائي، يمكن الانتظار
+      // حتى ينقر المستخدم في أي مكان بالصفحة لتشغيل الصوت
+      document.addEventListener("click", () => {
+        audio.play();
+      }, { once: true });
+    });
+
+    // إيقاف الصوت إذا خرج المستخدم من الصفحة (تبعًا لواجهات الرؤية)
+    document.addEventListener("visibilitychange", function() {
+      if (document.hidden) {
+        audio.pause();
+      } else {
+        audio.play();
+      }
+    });
+  </script>
 </body>
 </html>
