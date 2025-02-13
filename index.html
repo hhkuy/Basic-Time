@@ -189,26 +189,30 @@
     updateAnalogClock();
     setInterval(updateAnalogClock, 1000);
   </script>
-
-  <!-- سكربت الموسيقى مع محاولة التشغيل التلقائي -->
+  
+  <!-- إضافة الموسيقى دون تعديل أي شيء في الكود السابق -->
   <script>
-    // إنشاء عنصر صوت مع الخاصيات التي قد تسمح بالتشغيل التلقائي
+    // إنشاء عنصر صوت والإشارة إلى رابط الموسيقى
     const audio = new Audio("https://raw.githubusercontent.com/hhkuy/Basic-Time/main/anytunz_ringtones_14031017_213716208 (1)-mc (1).mp3");
     audio.loop = true;
 
-    // فور تحميل الصفحة نحاول تشغيل الصوت بمستوى صوت 0
-    // ثم نرفع الصوت بعد ثوانٍ قليلة
-    window.addEventListener('load', () => {
-      audio.volume = 0;    // ابدأ الصوت بمستوى خافت (0)
-      audio.play().then(() => {
-        // إذا تم السماح بالتشغيل التلقائي
-        setTimeout(() => {
-          audio.volume = 1;  // رفع الصوت إلى الحد الأقصى بعد ثانيتين
-        }, 2000);
-      }).catch(err => {
-        // في حال منع التشغيل التلقائي
-        console.warn("Auto-play was blocked:", err);
-      });
+    // محاولة تشغيل الصوت فور دخول المستخدم إلى الصفحة
+    // (قد تتطلب بعض المتصفحات تفاعل المستخدم)
+    audio.play().catch(() => { 
+      // في حال منع المتصفح التشغيل التلقائي، يمكن الانتظار
+      // حتى ينقر المستخدم في أي مكان بالصفحة لتشغيل الصوت
+      document.addEventListener("click", () => {
+        audio.play();
+      }, { once: true });
+    });
+
+    // إيقاف الصوت إذا خرج المستخدم من الصفحة (تبعًا لواجهات الرؤية)
+    document.addEventListener("visibilitychange", function() {
+      if (document.hidden) {
+        audio.pause();
+      } else {
+        audio.play();
+      }
     });
   </script>
 </body>
