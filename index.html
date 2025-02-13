@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Countdown and Analog Clock</title>
+  <style>
+    /* Basic Page Styles */
+    body {
+      background: linear-gradient(135deg, #1e1e1e, #3a3a3a);
+      color: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+      width: 100%;
+    }
+    /* Countdown Styles */
+    .countdown {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 20px 40px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+      margin-bottom: 40px;
+    }
+    .countdown .time {
+      font-size: 50px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      margin: 0;
+    }
+    .countdown .label {
+      font-size: 18px;
+      margin-top: 10px;
+    }
+    /* Analog Clock Styles */
+    .analog-clock {
+      position: relative;
+      width: 300px;
+      height: 300px;
+    }
+    .dial {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border: 8px solid #fff;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    /* Clock Markers */
+    .marker {
+      position: absolute;
+      left: 50%;
+      bottom: 50%;
+      width: 4px;
+      height: 20px;
+      background: #fff;
+      transform-origin: bottom center;
+    }
+    /* Clock Hands */
+    .hand {
+      position: absolute;
+      left: 50%;
+      bottom: 50%;
+      transform-origin: bottom center;
+    }
+    .hour-hand {
+      width: 6px;
+      height: 60px;
+      background: #fff;
+      border-radius: 6px;
+    }
+    .minute-hand {
+      width: 4px;
+      height: 90px;
+      background: #fff;
+      border-radius: 4px;
+    }
+    .second-hand {
+      width: 2px;
+      height: 100px;
+      background: red;
+      border-radius: 2px;
+    }
+    /* Center Dot */
+    .center-dot {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: #fff;
+      border-radius: 50%;
+      left: 50%;
+      bottom: 50%;
+      transform: translate(-50%, 50%);
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+  <!-- Centered Title above the countdown -->
+  <h1>Time Remaining for Basic Science Exam</h1>
+
+  <!-- Countdown Timer -->
+  <div class="countdown">
+    <p id="clock" class="time">--:--:--:--</p>
+    <p class="label">Days : Hours : Minutes : Seconds</p>
+  </div>
+
+  <!-- Analog Clock -->
+  <div class="analog-clock">
+    <div class="dial">
+      <!-- Clock Markers -->
+      <div class="marker" style="transform: translateX(-50%) rotate(0deg) translateY(-130px);"></div>
+      <div class="marker" style="transform: translateX(-50%) rotate(30deg) translateY(-130px);"></div>
+      <div class="marker" style="transform: translateX(-50%) rotate(60deg) translateY(-130px);"></div>
+      <div class="marker" style="transform: translateX(-50%) rotate(90deg) translateY(-130px);"></div>
+      <div class="marker" style="transform: translateX(-50%) rotate(120deg) translateY(-130px);"></div>
+      <div class="marker" style="transform: translateX(-50%) rotate(150deg) translateY(-130px);"></div>
+      <div class="marker" style="transform: translateX(-50%) rotate(180deg) translateY(-130px);"></div>
+      <div class="marker" style="transform: translateX(-50%) rotate(210deg) translateY(-130px);"></div>
+      <div class="marker" style="transform: translateX(-50%) rotate(240deg) translateY(-130px);"></div>
+      <div class="marker" style="transform: translateX(-50%) rotate(270deg) translateY(-130px);"></div>
+      <div class="marker" style="transform: translateX(-50%) rotate(300deg) translateY(-130px);"></div>
+      <div class="marker" style="transform: translateX(-50%) rotate(330deg) translateY(-130px);"></div>
+
+      <!-- Clock Hands -->
+      <div class="hand hour-hand" id="hour-hand"></div>
+      <div class="hand minute-hand" id="minute-hand"></div>
+      <div class="hand second-hand" id="second-hand"></div>
+      <!-- Center Dot -->
+      <div class="center-dot"></div>
+    </div>
+  </div>
+
+  <script>
+    // Target date: February 27, 2025 at 8:00 AM
+    const targetDate = new Date("2025-02-27T08:00:00");
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = targetDate - now;
+
+      if (diff <= 0) {
+        document.getElementById("clock").innerHTML = "00:00:00:00";
+        clearInterval(countdownInterval);
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      const format = num => num < 10 ? "0" + num : num;
+
+      document.getElementById("clock").innerHTML =
+        format(days) + ":" + format(hours) + ":" + format(minutes) + ":" + format(seconds);
+    }
+
+    updateCountdown();
+    const countdownInterval = setInterval(updateCountdown, 1000);
+
+    function updateAnalogClock() {
+      const now = new Date();
+      const seconds = now.getSeconds();
+      const minutes = now.getMinutes();
+      const hours = now.getHours();
+
+      const secondDegree = seconds * 6; // 360° / 60 seconds
+      const minuteDegree = minutes * 6 + seconds * 0.1; // 360° / 60 minutes plus smooth seconds
+      const hourDegree = (hours % 12) * 30 + minutes * 0.5; // 360° / 12 hours plus smooth minutes
+
+      document.getElementById("second-hand").style.transform =
+        "translateX(-50%) rotate(" + secondDegree + "deg)";
+      document.getElementById("minute-hand").style.transform =
+        "translateX(-50%) rotate(" + minuteDegree + "deg)";
+      document.getElementById("hour-hand").style.transform =
+        "translateX(-50%) rotate(" + hourDegree + "deg)";
+    }
+
+    updateAnalogClock();
+    setInterval(updateAnalogClock, 1000);
+  </script>
+</body>
+</html>
