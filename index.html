@@ -189,31 +189,30 @@
     updateAnalogClock();
     setInterval(updateAnalogClock, 1000);
   </script>
-  
-  <!-- إضافة الموسيقى دون تعديل أي شيء في الكود السابق -->
+
+  <!-- سكربت إضافة الصوت ومحاولة "النقرة التلقائية" -->
   <script>
-    // إنشاء عنصر صوت والإشارة إلى رابط الموسيقى
+    // عنصر الصوت
     const audio = new Audio("https://raw.githubusercontent.com/hhkuy/Basic-Time/main/anytunz_ringtones_14031017_213716208%20(1).mp3");
     audio.loop = true;
 
-    // محاولة تشغيل الصوت فور دخول المستخدم إلى الصفحة
-    // (قد تتطلب بعض المتصفحات تفاعل المستخدم)
-    audio.play().catch(() => { 
-      // في حال منع المتصفح التشغيل التلقائي، يمكن الانتظار
-      // حتى ينقر المستخدم في أي مكان بالصفحة لتشغيل الصوت
-      document.addEventListener("click", () => {
-        audio.play();
-      }, { once: true });
+    // محاكاة نقرة عند تحميل الصفحة
+    window.addEventListener('load', () => {
+      const fakeClick = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        view: window
+      });
+      document.dispatchEvent(fakeClick);
     });
 
-    // إيقاف الصوت إذا خرج المستخدم من الصفحة (تبعًا لواجهات الرؤية)
-    document.addEventListener("visibilitychange", function() {
-      if (document.hidden) {
-        audio.pause();
-      } else {
-        audio.play();
-      }
-    });
+    // عند أول نقرة (حتى لو كانت وهمية) تشغيل الصوت مرة واحدة
+    document.addEventListener('click', () => {
+      audio.play().catch(err => {
+        // إن فشل التشغيل (بسبب سياسات المتصفح) فلن يظهر الصوت
+        console.warn("Auto-play was blocked:", err);
+      });
+    }, { once: true });
   </script>
 </body>
 </html>
